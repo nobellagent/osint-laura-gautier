@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OSINT — Laura Gautier (Agronome)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    #map { height: 500px; width: 100%; border-radius: 1rem; z-index: 0; }
+    .leaflet-popup-content { font-size: 0.9rem; }
+  </style>
+</head>
+<body class="min-h-screen bg-base-300">
+
+  <!-- ===== Navbar ===== -->
+  <div class="navbar bg-base-100 shadow-lg sticky top-0 z-50">
+    <div class="flex-1">
+      <a class="btn btn-ghost text-xl">🕵️ OSINT — Laura Gautier</a>
+    </div>
+    <div class="flex-none gap-2">
+      <span class="badge badge-primary">Rapport OSINT</span>
+      <span class="badge badge-outline">juin 2026</span>
+    </div>
+  </div>
+
+  <!-- ===== Hero ===== -->
+  <div class="hero bg-base-200 py-12">
+    <div class="hero-content text-center">
+      <div class="max-w-2xl">
+        <h1 class="text-5xl font-bold">Laura GAUTIER</h1>
+        <p class="py-4 text-lg">Ingénieure production de semences • Pays de la Loire</p>
+        <p class="text-sm opacity-70">Rapport d'investigation OSINT — 6 juin 2026</p>
+        <div class="flex justify-center gap-2 mt-4">
+          <span class="badge badge-lg">📧 laura.gautier72@hotmail.fr</span>
+          <span class="badge badge-lg">🔗 linkedin.com/in/laura-gautier-</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Carte OpenStreetMap ===== -->
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold mb-4">🗺️ Lieux importants</h2>
+    <div id="map"></div>
+  </div>
+
+  <!-- ===== Fiche d'identité ===== -->
+  <div class="max-w-6xl mx-auto px-4 py-6">
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title text-2xl">📋 Fiche d'identité</h2>
+        <div class="stats stats-vertical lg:stats-horizontal shadow w-full">
+          <div class="stat">
+            <div class="stat-title">Nom complet</div>
+            <div class="stat-value text-lg">Laura GAUTIER</div>
+          </div>
+          <div class="stat">
+            <div class="stat-title">Métier</div>
+            <div class="stat-value text-lg">Ingénieure production de semences</div>
+            <div class="stat-desc">Filière semences potagères bio</div>
+          </div>
+          <div class="stat">
+            <div class="stat-title">Employeur</div>
+            <div class="stat-value text-lg">LOIRE SEEDS</div>
+            <div class="stat-desc">Corné (49) — près d'Angers</div>
+          </div>
+          <div class="stat">
+            <div class="stat-title">Formation</div>
+            <div class="stat-value text-lg">Agrocampus Ouest</div>
+            <div class="stat-desc">L'Institut Agro Rennes-Angers (2015-2020)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Sections déroulantes ===== -->
+  <div class="max-w-6xl mx-auto px-4 py-6 space-y-4">
+
+    <!-- 1. Email OSINT -->
+    <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+      <input type="checkbox" />
+      <div class="collapse-title text-xl font-medium">📧 Email OSINT — holehe (121 sites)</div>
+      <div class="collapse-content">
+        <p class="mb-3"><strong>Cible :</strong> laura.gautier72@hotmail.fr</p>
+        <p class="mb-3">Adresse Hotmail. Le rate-limiting habituel s'applique, mais un compte a été confirmé :</p>
+        <div class="alert alert-success mb-3">
+          <span>✅ <strong>Spotify</strong> — Compte confirmé (email utilisé)</span>
+        </div>
+        <p>Le "72" dans l'adresse pourrait faire référence au département de la Sarthe (72), potentiellement lié à son origine ou à une ancienne affectation professionnelle (Réseau Entreprendre Sarthe).</p>
+        <div class="mt-3 p-3 bg-base-200 rounded-box">
+          <p class="text-sm italic">Nota : Le rate-limiting de Microsoft/Hotmail est moins agressif que Gmail. Les résultats [x] (rate limit) concernent majoritairement des sites qui limitent par IP, pas par fournisseur de messagerie.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Parcours pro -->
+    <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+      <input type="checkbox" />
+      <div class="collapse-title text-xl font-medium">💼 Parcours professionnel</div>
+      <div class="collapse-content">
+        <ul class="timeline timeline-snap-icon timeline-vertical">
+          <li>
+            <div class="timeline-middle">●</div>
+            <div class="timeline-end timeline-box">
+              <time class="font-mono italic text-sm">2025 - Aujourd'hui</time>
+              <div class="text-lg font-black">Ingénieure production de semences</div>
+              <span class="badge badge-primary">LOIRE SEEDS</span>
+              <p class="mt-1">Corné (49), Pays de la Loire. Production de semences potagères.</p>
+            </div>
+            <hr/>
+          </li>
+          <li>
+            <div class="timeline-middle">●</div>
+            <div class="timeline-end timeline-box">
+              <time class="font-mono italic text-sm">~2022 - 2025</time>
+              <div class="text-lg font-black">AGROSEMENS</div>
+              <span class="badge">2 ans 6 mois</span>
+              <p class="mt-1">Acteur majeur de la commercialisation de semences biologiques (900+ variétés).</p>
+            </div>
+            <hr/>
+          </li>
+          <li>
+            <div class="timeline-middle">●</div>
+            <div class="timeline-end timeline-box">
+              <time class="font-mono italic text-sm">2020</time>
+              <div class="text-lg font-black">Stage de fin d'études</div>
+              <span class="badge badge-outline">AGROSEMENS</span>
+              <p class="mt-1">Master thesis : stratégie d'inscription et sélection conservatrice de variétés patrimoniales légumières en agriculture biologique.</p>
+            </div>
+            <hr/>
+          </li>
+          <li>
+            <div class="timeline-middle">●</div>
+            <div class="timeline-end timeline-box">
+              <time class="font-mono italic text-sm">2015 - 2020</time>
+              <div class="text-lg font-black">Agrocampus Ouest</div>
+              <span class="badge badge-outline">L'Institut Agro Rennes-Angers</span>
+              <p class="mt-1">Formation d'ingénieur agronome — spécialisation semences et production végétale.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 3. Formation & Recherche -->
+    <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+      <input type="checkbox" />
+      <div class="collapse-title text-xl font-medium">🎓 Formation & Travail de recherche</div>
+      <div class="collapse-content">
+        <h4 class="font-bold">Agrocampus Ouest / L'Institut Agro Rennes-Angers (2015-2020)</h4>
+        <p class="mb-3">Diplôme d'ingénieur agronome — Spécialisation en production de semences et agriculture biologique.</p>
+
+        <div class="card bg-base-200 p-4">
+          <h5 class="font-bold">📄 Mémoire de fin d'études (2020)</h5>
+          <p class="mt-2"><em>"Mise au point d'une stratégie d'inscription et de sélection conservatrice de variétés patrimoniales légumières en agriculture biologique : exemple de l'entreprise semencière AGROSEMENS"</em></p>
+          <p class="mt-2"><strong>Directeurs :</strong> Emmanuel Geoffriau, Louis-Marie Brouard</p>
+          <p class="mt-2"><strong>Résumé :</strong> Définition d'une méthodologie complète pour l'inscription au Catalogue Officiel (listes C/D) et la maintenance de variétés patrimoniales, en limitant la dérive génétique.</p>
+          <p class="mt-2 flex items-center gap-2">
+            <span class="badge badge-accent">HAL</span>
+            <a class="link link-primary" href="https://dumas.ccsd.cnrs.fr/dumas-03044131v1" target="_blank">Consulter le mémoire</a>
+          </p>
+        </div>
+
+        <h4 class="font-bold mt-4">🌍 Langues</h4>
+        <ul class="list-disc list-inside">
+          <li>Français — Langue maternelle</li>
+          <li>Anglais — Niveau C1 (Full professional proficiency)</li>
+          <li>Espagnol — Courant</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 4. Comptes et présence en ligne -->
+    <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+      <input type="checkbox" />
+      <div class="collapse-title text-xl font-medium">🌐 Présence en ligne</div>
+      <div class="collapse-content">
+        <p class="mb-3">Comptes identifiés via holehe et recherche web :</p>
+
+        <div class="overflow-x-auto">
+          <table class="table table-zebra">
+            <thead>
+              <tr><th>Plateforme</th><th>Statut</th><th>Note</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>LinkedIn</td>
+                <td><span class="badge badge-success">Confirmé</span></td>
+                <td><a class="link link-primary" href="https://www.linkedin.com/in/laura-gautier-" target="_blank">linkedin.com/in/laura-gautier-</a> — 646+ abonnés</td>
+              </tr>
+              <tr>
+                <td>Spotify</td>
+                <td><span class="badge badge-success">Confirmé</span></td>
+                <td>Compte actif (holehe) — écoute de musique</td>
+              </tr>
+              <tr>
+                <td>HAL / DUMAS</td>
+                <td><span class="badge badge-success">Confirmé</span></td>
+                <td><a class="link link-primary" href="https://dumas.ccsd.cnrs.fr/dumas-03044131v1" target="_blank">Mémoire de fin d'études</a> (2020)</td>
+              </tr>
+              <tr>
+                <td>Facebook</td>
+                <td><span class="badge badge-warning">Probable</span></td>
+                <td>Plusieurs interactions publiques dans des groupes angevins (RuninAngers, pages locales)</td>
+              </tr>
+              <tr>
+                <td>Instagram</td>
+                <td><span class="badge">Rate-limit</span></td>
+                <td>Non confirmé (rate-limiting holehe)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="alert alert-info mt-4">
+          <span>ℹ️ Le username « lauragautier » existe sur 23+ plateformes (Chess.com, Duolingo, Strava, etc.) mais peut appartenir à une homonyme (développeuse web). À vérifier au cas par cas.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Centres d'intérêt -->
+    <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+      <input type="checkbox" />
+      <div class="collapse-title text-xl font-medium">🚣 Centres d'intérêt</div>
+      <div class="collapse-content">
+        <ul class="list-disc list-inside space-y-3">
+          <li>
+            <strong>🚣 Aviron (loisir)</strong> — Pratique de l'aviron dans la région Pays de la Loire / Anjou.
+          </li>
+          <li>
+            <strong>🏃 Running</strong> — Membre du groupe Facebook <em>RuninAngers</em>, groupe de course à pied angevin.
+          </li>
+          <li>
+            <strong>🎵 Musique</strong> — Compte Spotify confirmé.
+          </li>
+          <li>
+            <strong>🌱 Agronomie / Semences</strong> — Passionnée par les semences potagères bio et la préservation des variétés patrimoniales.
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 6. Méthodologie -->
+    <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+      <input type="checkbox" />
+      <div class="collapse-title text-xl font-medium">🔬 Méthodologie</div>
+      <div class="collapse-content">
+        <div class="overflow-x-auto">
+          <table class="table table-zebra">
+            <thead>
+              <tr><th>Outil</th><th>Cible</th><th>Résultat</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>holehe</td>
+                <td>laura.gautier72@hotmail.fr</td>
+                <td>121 sites vérifiés — Spotify confirmé</td>
+              </tr>
+              <tr>
+                <td>Recherche web</td>
+                <td>"Laura Gautier" + agronome/Agrocampus</td>
+                <td>LinkedIn, mémoire HAL, Loire Seeds</td>
+              </tr>
+              <tr>
+                <td>Recherche web</td>
+                <td>"Laura Gautier" + Angers/aviron</td>
+                <td>Groupes Facebook angevins (RuninAngers)</td>
+              </tr>
+              <tr>
+                <td>HAL (archive ouverte)</td>
+                <td>Mémoire d'ingénieur 2020</td>
+                <td>Thèse sur les semences bio chez AGROSEMENS</td>
+              </tr>
+              <tr>
+                <td>OpenStreetMap</td>
+                <td>Géolocalisation</td>
+                <td>Carte interactive des lieux clés</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="mt-3 text-sm opacity-70">⚠️ Les comptes sherlock sous le username « lauragautier » n'ont pas été inclus car ils pourraient appartenir à une homonyme (développeuse web). Seuls les comptes confirmés spécifiques à cette personne sont listés.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer footer-center bg-base-100 text-base-content p-6 mt-8">
+    <div>
+      <p>Rapport OSINT généré le 6 juin 2026 • Hermes Agent • nobellagent</p>
+      <p class="text-xs opacity-50">Données issues de sources publiques. Vérifier avant toute utilisation.</p>
+    </div>
+  </footer>
+
+  <script>
+    const map = L.map('map').setView([47.5, -0.5], 8);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 18,
+    }).addTo(map);
+
+    const markers = [
+      {
+        coords: [47.4719, -0.3466],
+        title: '🏢 Corné (49)',
+        desc: 'LOIRE SEEDS — Lieu de travail actuel<br/>Production de semences potagères'
+      },
+      {
+        coords: [47.4784, -0.5508],
+        title: '🏙️ Angers (49)',
+        desc: 'Métropole de rattachement<br/>Groupes locaux : RuninAngers, pages Facebook'
+      },
+      {
+        coords: [48.1135, -1.6765],
+        title: '🎓 Rennes / Agrocampus Ouest',
+        desc: 'Formation ingénieur agronome (2015-2020)<br/>L\'Institut Agro Rennes-Angers'
+      },
+      {
+        coords: [47.4719, -0.5508],
+        title: '🌱 AGROSEMENS',
+        desc: 'Ancien employeur (2 ans 6 mois)<br/>Semences biologiques, 900+ variétés'
+      },
+    ];
+
+    markers.forEach(m => {
+      L.marker(m.coords)
+        .addTo(map)
+        .bindPopup(`<strong>${m.title}</strong><br>${m.desc}`);
+    });
+
+    const group = L.featureGroup(markers.map(m => L.marker(m.coords)));
+    map.fitBounds(group.getBounds().pad(0.15));
+  </script>
+
+</body>
+</html>
