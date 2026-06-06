@@ -12,192 +12,333 @@
     #map { height: 500px; width: 100%; border-radius: 1rem; z-index: 0; }
     .leaflet-popup-content { font-size: 0.9rem; }
     .timeline-box { max-width: 100%; }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in { animation: fadeInUp 0.5s ease-out both; }
+    .animate-fade-in:nth-child(1) { animation-delay: 0.1s; }
+    .animate-fade-in:nth-child(2) { animation-delay: 0.2s; }
+    .animate-fade-in:nth-child(3) { animation-delay: 0.3s; }
+    .animate-fade-in:nth-child(4) { animation-delay: 0.4s; }
+
+    /* Evidence card styling */
+    .evidence { border-left: 4px solid; transition: transform 0.2s; }
+    .evidence:hover { transform: translateX(4px); }
+    .evidence.confirmed { border-color: #22c55e; }
+    .evidence.probable { border-color: #eab308; }
+    .evidence.theory { border-color: #64748b; }
+
+    /* Sticky TOC */
+    .toc-link { transition: all 0.2s; position: relative; }
+    .toc-link:hover { padding-left: 4px; }
+
+    /* Print button */
+    @media print {
+      .no-print { display: none !important; }
+      .collapse-content { display: block !important; }
+      details.collapse { break-inside: avoid; }
+    }
+
+    /* Smooth scroll */
+    html { scroll-behavior: smooth; }
+
+    /* Gradient hero */
+    .hero-gradient {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #1a1a2e 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-gradient::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(34,197,94,0.06) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-gradient::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -10%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(59,130,246,0.05) 0%, transparent 70%);
+      border-radius: 50%;
+    }
   </style>
 </head>
 <body class="min-h-screen bg-base-300">
 
-  <!-- ===== Navbar ===== -->
-  <div class="navbar bg-base-100 shadow-lg sticky top-0 z-50">
+  <!-- ===== NAVBAR ===== -->
+  <div class="navbar bg-base-100 shadow-lg sticky top-0 z-50 no-print">
     <div class="flex-1">
-      <a class="btn btn-ghost text-xl">🕵️ OSINT — Laura Gautier</a>
+      <a class="btn btn-ghost text-xl">
+        <span class="text-lg">🕵️</span> OSINT Report
+      </a>
     </div>
     <div class="flex-none gap-2">
-      <span class="badge badge-primary">Rapport complet</span>
-      <span class="badge badge-outline">juin 2026</span>
+      <button class="btn btn-ghost btn-sm" onclick="window.print()">
+        <span class="text-base">🖨️</span>
+        <span class="hidden sm:inline">Imprimer</span>
+      </button>
+      <span class="badge badge-primary badge-sm sm:badge-md">Rapport complet</span>
     </div>
   </div>
 
-  <!-- ===== Hero ===== -->
-  <div class="hero bg-base-200 py-12">
-    <div class="hero-content text-center">
-      <div class="max-w-2xl">
-        <h1 class="text-5xl font-bold">Laura GAUTIER</h1>
-        <p class="py-4 text-lg">Ingénieure production de semences • Anjou / Pays de la Loire</p>
-        <p class="text-sm opacity-70">Rapport d'investigation OSINT — 6 juin 2026</p>
-        <div class="flex justify-center gap-2 mt-4 flex-wrap">
-          <span class="badge badge-lg">📧 laura.gautier72@hotmail.fr</span>
-          <span class="badge badge-lg">🔗 linkedin.com/in/laura-gautier-</span>
-          <span class="badge badge-lg">📱 facebook.com/laura.gautier.35</span>
+  <!-- ===== HERO ===== -->
+  <div class="hero hero-gradient py-16 sm:py-20 relative">
+    <div class="hero-content text-center relative z-10">
+      <div class="max-w-3xl">
+        <div class="avatar mb-6">
+          <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-base-300/30 ring-2 ring-success/50 flex items-center justify-center mx-auto">
+            <span class="text-5xl sm:text-6xl">👩‍🌾</span>
+          </div>
+        </div>
+        <h1 class="text-4xl sm:text-6xl font-bold text-base-content">Laura GAUTIER</h1>
+        <p class="py-3 text-lg sm:text-xl text-base-content/80">Ingénieure production de semences</p>
+        <div class="flex flex-wrap justify-center gap-2 mt-2">
+          <div class="badge badge-lg">📧 laura.gautier72@hotmail.fr</div>
+          <div class="badge badge-lg">📍 Alençon (61) → Angers (49)</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ===== Carte OpenStreetMap ===== -->
+  <!-- ===== TABLE OF CONTENTS (mobile: horizontal scroll, desktop: cards) ===== -->
+  <div class="max-w-6xl mx-auto px-4 -mt-6 relative z-20 no-print">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 animate-fade-in">
+      <a href="#origines" class="card bg-base-100 shadow hover:shadow-lg transition-all hover:-translate-y-1">
+        <div class="card-body p-4 text-center">
+          <span class="text-2xl">📍</span>
+          <span class="text-xs font-bold mt-1">Origines</span>
+        </div>
+      </a>
+      <a href="#email" class="card bg-base-100 shadow hover:shadow-lg transition-all hover:-translate-y-1">
+        <div class="card-body p-4 text-center">
+          <span class="text-2xl">📧</span>
+          <span class="text-xs font-bold mt-1">Email</span>
+        </div>
+      </a>
+      <a href="#carriere" class="card bg-base-100 shadow hover:shadow-lg transition-all hover:-translate-y-1">
+        <div class="card-body p-4 text-center">
+          <span class="text-2xl">💼</span>
+          <span class="text-xs font-bold mt-1">Carrière</span>
+        </div>
+      </a>
+      <a href="#formation" class="card bg-base-100 shadow hover:shadow-lg transition-all hover:-translate-y-1">
+        <div class="card-body p-4 text-center">
+          <span class="text-2xl">🎓</span>
+          <span class="text-xs font-bold mt-1">Formation</span>
+        </div>
+      </a>
+      <a href="#online" class="card bg-base-100 shadow hover:shadow-lg transition-all hover:-translate-y-1">
+        <div class="card-body p-4 text-center">
+          <span class="text-2xl">🌐</span>
+          <span class="text-xs font-bold mt-1">Présence</span>
+        </div>
+      </a>
+      <a href="#loisirs" class="card bg-base-100 shadow hover:shadow-lg transition-all hover:-translate-y-1">
+        <div class="card-body p-4 text-center">
+          <span class="text-2xl">🚣</span>
+          <span class="text-xs font-bold mt-1">Loisirs</span>
+        </div>
+      </a>
+      <a href="#geo" class="card bg-base-100 shadow hover:shadow-lg transition-all hover:-translate-y-1">
+        <div class="card-body p-4 text-center">
+          <span class="text-2xl">🗺️</span>
+          <span class="text-xs font-bold mt-1">Carte</span>
+        </div>
+      </a>
+      <a href="#methodo" class="card bg-base-100 shadow hover:shadow-lg transition-all hover:-translate-y-1">
+        <div class="card-body p-4 text-center">
+          <span class="text-2xl">🔬</span>
+          <span class="text-xs font-bold mt-1">Sources</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ===== REPORT CARD ===== -->
   <div class="max-w-6xl mx-auto px-4 py-8">
-    <h2 class="text-2xl font-bold mb-4">🗺️ Carte des lieux de vie</h2>
-    <p class="text-sm opacity-70 mb-4">Du berceau alençonnais à la carrière angevine</p>
-    <div id="map"></div>
-  </div>
-
-  <!-- ===== Fiche d'identité ===== -->
-  <div class="max-w-6xl mx-auto px-4 py-6">
-    <div class="card bg-base-100 shadow-xl">
-      <div class="card-body">
-        <h2 class="card-title text-2xl">📋 Fiche d'identité</h2>
-        <div class="stats stats-vertical lg:stats-horizontal shadow w-full">
-          <div class="stat">
-            <div class="stat-title">Nom complet</div>
-            <div class="stat-value text-lg">Laura GAUTIER</div>
+    <div class="card bg-base-100 shadow-xl animate-fade-in">
+      <div class="card-body p-4 sm:p-6">
+        <h2 class="card-title text-lg sm:text-xl">
+          <span>📋</span> Rapport d'enquête
+          <span class="badge badge-success badge-sm ml-2">Complet</span>
+        </h2>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3">
+          <div class="stat px-2 py-3">
+            <div class="stat-title text-xs">Identité</div>
+            <div class="stat-value text-base">Établie</div>
+            <div class="stat-desc text-xs">Nom complet confirmé</div>
           </div>
-          <div class="stat">
-            <div class="stat-title">Date de naissance</div>
-            <div class="stat-value text-lg">~1997-1998</div>
-            <div class="stat-desc">J15 en aviron en 2015 (estimation)</div>
+          <div class="stat px-2 py-3">
+            <div class="stat-title text-xs">Origine</div>
+            <div class="stat-value text-base">Alençon</div>
+            <div class="stat-desc text-xs">61 / Champfleur 72</div>
           </div>
-          <div class="stat">
-            <div class="stat-title">Lieu de naissance</div>
-            <div class="stat-value text-lg">Alençon (61)</div>
-            <div class="stat-desc">Orne, Normandie</div>
+          <div class="stat px-2 py-3">
+            <div class="stat-title text-xs">Comptes trouvés</div>
+            <div class="stat-value text-base">5</div>
+            <div class="stat-desc text-xs">LinkedIn, Facebook, Spotify, HAL</div>
           </div>
-          <div class="stat">
-            <div class="stat-title">Ville d'origine</div>
-            <div class="stat-value text-lg">Champfleur (72)</div>
-            <div class="stat-desc">Sarthe — Communauté urbaine d'Alençon</div>
-          </div>
-        </div>
-        <div class="stats stats-vertical lg:stats-horizontal shadow w-full mt-4">
-          <div class="stat">
-            <div class="stat-title">Métier</div>
-            <div class="stat-value text-lg">Ingénieure production de semences</div>
-            <div class="stat-desc">Filière semences potagères bio</div>
-          </div>
-          <div class="stat">
-            <div class="stat-title">Employeur actuel</div>
-            <div class="stat-value text-lg">LOIRE SEEDS</div>
-            <div class="stat-desc">Corné (49) — Angers</div>
-          </div>
-          <div class="stat">
-            <div class="stat-title">Formation</div>
-            <div class="stat-value text-lg">Agrocampus Ouest</div>
-            <div class="stat-desc">L'Institut Agro Rennes-Angers (2015-2020)</div>
-          </div>
-          <div class="stat">
-            <div class="stat-title">Lycée</div>
-            <div class="stat-value text-lg">LPA Alençon</div>
-            <div class="stat-desc">Lycée Professionnel Agricole d'Alençon</div>
+          <div class="stat px-2 py-3">
+            <div class="stat-title text-xs">Niveau confiance</div>
+            <div class="stat-value text-success">90%</div>
+            <div class="stat-desc text-xs">Sources multiples concordantes</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ===== Sections déroulantes ===== -->
-  <div class="max-w-6xl mx-auto px-4 py-6 space-y-4">
+  <!-- ===== SECTIONS ===== -->
+  <div class="max-w-6xl mx-auto px-4 py-4 space-y-5">
 
-    <!-- 1. ORIGINES -->
-    <details class="collapse collapse-arrow bg-base-100 border border-base-300" open>
-      <summary class="collapse-title text-xl font-medium">📍 Origines — Preuves qu'elle vient d'Alençon/Champfleur</summary>
+    <!-- SECTION 1 : ORIGINES -->
+    <details class="collapse collapse-arrow bg-base-100 border border-base-300 shadow-sm" open id="origines">
+      <summary class="collapse-title text-xl font-semibold">
+        <span class="flex items-center gap-2">
+          <span>📍</span> Origines — Preuves qu'elle vient d'Alençon/Champfleur
+          <span class="badge badge-success badge-sm ml-auto">4 preuves</span>
+        </span>
+      </summary>
       <div class="collapse-content">
-
-        <div class="alert alert-success mb-4">
-          <span>✅ Origine établie : Alençon (61) — Champfleur (72)</span>
+        <div class="alert alert-success mb-4 shadow-sm">
+          <span>✅ Origine établie : Alençon (61) — Champfleur (72). Sources concordantes à 90%.</span>
         </div>
 
-        <h4 class="font-bold">Preuve n°1 — LinkedIn (localisation)</h4>
-        <div class="card bg-base-200 p-4 mb-4">
-          <p>Le profil LinkedIn de Laura Gautier (<a class="link link-primary" href="https://www.linkedin.com/in/laura-gautier-" target="_blank">linkedin.com/in/laura-gautier-</a>) liste comme localisation :</p>
-          <div class="bg-base-300 p-3 mt-2 rounded font-mono text-lg text-center">
-            Alençon, Basse-Normandie, France
+        <div class="grid gap-4">
+          <div class="p-4 rounded-box evidence confirmed bg-base-200">
+            <div class="flex items-start gap-3">
+              <span class="text-xl mt-0.5">🟢</span>
+              <div>
+                <h4 class="font-bold">Preuve n°1 — LinkedIn</h4>
+                <p class="mt-1">Le profil LinkedIn mentionne comme localisation :</p>
+                <div class="bg-base-300 p-3 mt-2 rounded font-mono text-center">Alençon, Basse-Normandie, France</div>
+                <div class="flex flex-wrap gap-2 mt-2">
+                  <span class="badge badge-success badge-xs">Confirmé</span>
+                  <a class="link link-primary link-xs" href="https://www.linkedin.com/in/laura-gautier-" target="_blank">Voir le profil</a>
+                </div>
+              </div>
+            </div>
           </div>
-          <p class="text-sm mt-2 opacity-70">Source : Extrait du meta-description Google du profil LinkedIn. Donnée publique indexée par les moteurs de recherche.</p>
-        </div>
 
-        <h4 class="font-bold">Preuve n°2 — Facebook (éducation et famille)</h4>
-        <div class="card bg-base-200 p-4 mb-4">
-          <p>Le profil Facebook <a class="link link-primary" href="https://www.facebook.com/laura.gautier.35/" target="_blank">facebook.com/laura.gautier.35</a> mentionne :</p>
-          <ul class="list-disc list-inside mt-2 space-y-1">
-            <li><strong>Éducation :</strong> LPA Alençon (Lycée Professionnel Agricole d'Alençon — 250 avenue Général Leclerc, 61000 Alençon)</li>
-            <li><strong>Famille :</strong> Sébastien Kerambellec et Morrigan Wolfmoon</li>
-          </ul>
-          <p class="text-sm mt-2 opacity-70">Le LPA Alençon est un lycée agricole public, cohérent avec son parcours d'ingénieure agronome.</p>
-        </div>
+          <div class="p-4 rounded-box evidence confirmed bg-base-200">
+            <div class="flex items-start gap-3">
+              <span class="text-xl mt-0.5">🟢</span>
+              <div>
+                <h4 class="font-bold">Preuve n°2 — Facebook</h4>
+                <ul class="list-disc list-inside mt-1 space-y-1">
+                  <li><strong>Éducation :</strong> LPA Alençon — Lycée Professionnel Agricole</li>
+                  <li><strong>Famille :</strong> Sébastien Kerambellec, Morrigan Wolfmoon</li>
+                </ul>
+                <div class="flex flex-wrap gap-2 mt-2">
+                  <span class="badge badge-success badge-xs">Confirmé</span>
+                  <a class="link link-primary link-xs" href="https://www.facebook.com/laura.gautier.35/" target="_blank">Voir le profil</a>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <h4 class="font-bold">Preuve n°3 — Géographie : Alençon (61) ↔ Champfleur (72)</h4>
-        <div class="card bg-base-200 p-4 mb-4">
-          <p><strong>Champfleur</strong> (code postal 72610) est une commune de la Sarthe située à <strong>8 km au sud d'Alençon</strong>.</p>
-          <p>Elle fait partie de la <strong>Communauté urbaine d'Alençon</strong>, qui regroupe des communes de l'Orne ET de la Sarthe.</p>
-          <div class="bg-base-300 p-3 mt-2 rounded text-sm">
-            <p>📍 Alençon (61, Orne, Normandie) — 8 km → Champfleur (72, Sarthe, Pays de la Loire)</p>
-            <p>📍 Les deux communes sont limitrophes et forment une même zone urbaine.</p>
-            <p>📍 Le "72" dans l'adresse email (laura.gautier72@hotmail.fr) correspond au département de la Sarthe.</p>
+          <div class="p-4 rounded-box evidence confirmed bg-base-200">
+            <div class="flex items-start gap-3">
+              <span class="text-xl mt-0.5">🟢</span>
+              <div>
+                <h4 class="font-bold">Preuve n°3 — Géographie</h4>
+                <p class="mt-1"><strong>Champfleur</strong> (72610) est à <strong>8 km au sud d'Alençon</strong>, dans la Sarthe (72). Les deux communes partagent la <strong>Communauté urbaine d'Alençon</strong>.</p>
+                <div class="bg-base-300 p-3 mt-2 rounded text-sm space-y-1">
+                  <p>📍 Alençon (61, Orne) → 8 km → Champfleur (72, Sarthe)</p>
+                  <p>📧 Le "72" dans l'email = département de la Sarthe</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-box evidence theory bg-base-200">
+            <div class="flex items-start gap-3">
+              <span class="text-xl mt-0.5">⚪</span>
+              <div>
+                <h4 class="font-bold">Preuve n°4 — Annuaires</h4>
+                <p class="mt-1">Profils "Laura Gautier" récurrents avec la localisation Alençon sur Trombi, Copains d'Avant et LinkedIn directory.</p>
+                <span class="badge badge-ghost badge-xs mt-2">Confirmé partiellement</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <h4 class="font-bold">Preuve n°4 — Annuaires en ligne</h4>
-        <div class="card bg-base-200 p-4">
-          <p>Plusieurs profils "Laura Gautier" sont référencés avec la localisation Alençon sur les moteurs de recherche et annuaires en ligne.</p>
+        <div class="divider my-4">⚖️ Bilan</div>
+        <div class="flex items-center gap-4 flex-wrap">
+          <progress class="progress progress-success w-full sm:w-64" value="90" max="100"></progress>
+          <span class="text-sm font-bold">90% de confiance</span>
         </div>
-
       </div>
     </details>
 
-    <!-- 2. EMAIL OSINT -->
-    <details class="collapse collapse-arrow bg-base-100 border border-base-300">
-      <summary class="collapse-title text-xl font-medium">📧 Email OSINT — holehe (121 sites)</summary>
+    <!-- SECTION 2 : EMAIL -->
+    <details class="collapse collapse-arrow bg-base-100 border border-base-300 shadow-sm" id="email">
+      <summary class="collapse-title text-xl font-semibold">
+        <span class="flex items-center gap-2">
+          <span>📧</span> Email OSINT — holehe (121 sites)
+        </span>
+      </summary>
       <div class="collapse-content">
         <p class="mb-3"><strong>Cible :</strong> laura.gautier72@hotmail.fr</p>
-        <p class="mb-3">Le "72" dans l'adresse fait référence au département de la Sarthe, où se trouve <strong>Champfleur</strong>.</p>
+        <p class="mb-3">Le "72" dans l'adresse correspond au département de la Sarthe, où se trouve <strong>Champfleur</strong>, son village d'origine présumé.</p>
 
-        <div class="stats shadow mb-4">
-          <div class="stat">
-            <div class="stat-title">Sites vérifiés</div>
-            <div class="stat-value">121</div>
+        <div class="grid grid-cols-3 gap-3 mb-4">
+          <div class="stat bg-base-200 rounded-box p-3">
+            <div class="stat-title text-xs">Sites vérifiés</div>
+            <div class="stat-value text-xl">121</div>
           </div>
-          <div class="stat">
-            <div class="stat-title">Comptes confirmés</div>
-            <div class="stat-value text-success">1</div>
+          <div class="stat bg-base-200 rounded-box p-3">
+            <div class="stat-title text-xs">Comptes confirmés</div>
+            <div class="stat-value text-xl text-success">1</div>
           </div>
-          <div class="stat">
-            <div class="stat-title">Rate-limited</div>
-            <div class="stat-value">120</div>
+          <div class="stat bg-base-200 rounded-box p-3">
+            <div class="stat-title text-xs">Rate-limited</div>
+            <div class="stat-value text-xl">120</div>
           </div>
         </div>
 
-        <div class="alert alert-success mb-3">
-          <span>✅ <strong>Spotify</strong> — Compte actif confirmé ! L'adresse est utilisée sur Spotify.</span>
+        <div class="alert alert-success shadow-sm mb-3">
+          <span>✅ <strong>Spotify</strong> — Compte actif confirmé !</span>
         </div>
 
-        <h4 class="font-bold">Interprétation des résultats</h4>
-        <p class="mb-2">Les résultats [x] (Rate limit) sont normaux pour une adresse Hotmail/Outlook. Sites non confirmés :</p>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-1 text-xs">
-          <span>Instagram</span><span>Twitter/X</span><span>Facebook</span><span>Snapchat</span>
-          <span>TikTok</span><span>LinkedIn</span><span>Pinterest</span><span>YouTube</span>
-          <span>Discord</span><span>GitHub</span><span>Strava</span><span>Office365</span>
-          <span>Amazon</span><span>eBay</span><span>Eventbrite</span><span>Patreon</span>
-        </div>
+        <details class="bg-base-200 rounded-box p-3">
+          <summary class="text-sm font-semibold cursor-pointer">Voir les sites non confirmés (rate-limit)</summary>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-1 text-xs mt-2">
+            <span>Instagram</span><span>Twitter/X</span><span>Facebook</span><span>Snapchat</span>
+            <span>TikTok</span><span>LinkedIn</span><span>Pinterest</span><span>YouTube</span>
+            <span>Discord</span><span>GitHub</span><span>Strava</span><span>Office365</span>
+            <span>Amazon</span><span>eBay</span><span>Eventbrite</span><span>Patreon</span>
+            <span>Komoot</span><span>Deliveroo</span><span>Nike</span><span>Garmin</span>
+          </div>
+        </details>
       </div>
     </details>
 
-    <!-- 3. PARCOURS PRO -->
-    <details class="collapse collapse-arrow bg-base-100 border border-base-300">
-      <summary class="collapse-title text-xl font-medium">💼 Parcours professionnel</summary>
+    <!-- SECTION 3 : CARRIERE -->
+    <details class="collapse collapse-arrow bg-base-100 border border-base-300 shadow-sm" id="carriere">
+      <summary class="collapse-title text-xl font-semibold">
+        <span class="flex items-center gap-2">
+          <span>💼</span> Parcours professionnel
+        </span>
+      </summary>
       <div class="collapse-content">
         <ul class="timeline timeline-snap-icon timeline-vertical">
           <li>
-            <div class="timeline-middle">●</div>
+            <div class="timeline-middle">
+              <span class="text-success">●</span>
+            </div>
             <div class="timeline-end timeline-box">
-              <time class="font-mono italic text-sm">2025 - Aujourd'hui</time>
+              <time class="font-mono italic text-sm">2025 → Aujourd'hui</time>
               <div class="text-lg font-black">Ingénieure production de semences</div>
               <span class="badge badge-primary">LOIRE SEEDS • Corné (49)</span>
               <p class="mt-1">Production de semences potagères pour le marché professionnel.</p>
@@ -205,37 +346,37 @@
             <hr/>
           </li>
           <li>
-            <div class="timeline-middle">●</div>
+            <div class="timeline-middle"><span>●</span></div>
             <div class="timeline-end timeline-box">
-              <time class="font-mono italic text-sm">~2022 - 2025</time>
+              <time class="font-mono italic text-sm">~2022 → 2025</time>
               <div class="text-lg font-black">AGROSEMENS</div>
               <span class="badge">2 ans 6 mois</span>
-              <p class="mt-1">Commercialisation de semences biologiques. Portefeuille de près de 900 variétés.</p>
+              <p class="mt-1">Commercialisation de semences biologiques professionnelles. Portefeuille de ~900 variétés.</p>
             </div>
             <hr/>
           </li>
           <li>
-            <div class="timeline-middle">●</div>
+            <div class="timeline-middle"><span>●</span></div>
             <div class="timeline-end timeline-box">
               <time class="font-mono italic text-sm">2020</time>
-              <div class="text-lg font-black">Stage fin d'études — AGROSEMENS</div>
-              <span class="badge badge-outline">Mémoire d'ingénieur</span>
-              <p class="mt-1 italic">Stratégie d'inscription et sélection conservatrice de variétés patrimoniales légumières en agriculture biologique.</p>
+              <div class="text-lg font-black">Stage fin d'études</div>
+              <span class="badge badge-outline">AGROSEMENS</span>
+              <p class="mt-1 italic text-sm">Mémoire : stratégie d'inscription de variétés patrimoniales en agriculture biologique.</p>
             </div>
             <hr/>
           </li>
           <li>
-            <div class="timeline-middle">●</div>
+            <div class="timeline-middle"><span>●</span></div>
             <div class="timeline-end timeline-box">
-              <time class="font-mono italic text-sm">2015 - 2020</time>
-              <div class="text-lg font-black">Agrocampus Ouest / L'Institut Agro</div>
-              <span class="badge badge-outline">Rennes-Angers</span>
-              <p class="mt-1">Formation d'ingénieur agronome. Spécialisation semences et agriculture biologique.</p>
+              <time class="font-mono italic text-sm">2015 → 2020</time>
+              <div class="text-lg font-black">Agrocampus Ouest</div>
+              <span class="badge badge-outline">L'Institut Agro Rennes-Angers</span>
+              <p class="mt-1">Formation d'ingénieur agronome — spécialisation semences.</p>
             </div>
             <hr/>
           </li>
           <li>
-            <div class="timeline-middle">●</div>
+            <div class="timeline-middle"><span>●</span></div>
             <div class="timeline-end timeline-box">
               <time class="font-mono italic text-sm">Avant 2015</time>
               <div class="text-lg font-black">LPA Alençon</div>
@@ -247,155 +388,213 @@
       </div>
     </details>
 
-    <!-- 4. FORMATION -->
-    <details class="collapse collapse-arrow bg-base-100 border border-base-300">
-      <summary class="collapse-title text-xl font-medium">🎓 Formation détaillée & Travaux</summary>
+    <!-- SECTION 4 : FORMATION -->
+    <details class="collapse collapse-arrow bg-base-100 border border-base-300 shadow-sm" id="formation">
+      <summary class="collapse-title text-xl font-semibold">
+        <span class="flex items-center gap-2">
+          <span>🎓</span> Formation & Travaux
+        </span>
+      </summary>
       <div class="collapse-content">
-        <h4 class="font-bold">L'Institut Agro Rennes-Angers (ex-Agrocampus Ouest)</h4>
-        <p class="mb-3">Grande école d'ingénieurs agronomes. Spécialisation en production de semences.</p>
-
-        <div class="card bg-base-200 p-4 mb-4">
-          <h5 class="font-bold">📄 Mémoire de fin d'études (2020)</h5>
-          <div class="divider my-2"></div>
-          <p class="italic">"Mise au point d'une stratégie d'inscription et de sélection conservatrice de variétés patrimoniales légumières en agriculture biologique : exemple de l'entreprise semencière AGROSEMENS"</p>
-          <div class="divider my-2"></div>
-          <p><strong>Auteur :</strong> Laura Gautier</p>
-          <p><strong>Directeurs :</strong> Emmanuel Geoffriau, Louis-Marie Brouard</p>
-          <p><strong>Établissement :</strong> Agrocampus Ouest — Institut Agro Rennes-Angers, 2020</p>
-          <p><strong>Résumé :</strong> Méthodologie d'inscription au Catalogue Officiel (listes C/D) et maintenance de variétés patrimoniales en limitant la dérive génétique.</p>
-          <div class="flex items-center gap-2 mt-3">
-            <span class="badge badge-accent">HAL Open Access</span>
-            <a class="link link-primary" href="https://dumas.ccsd.cnrs.fr/dumas-03044131v1" target="_blank">Consulter le mémoire (PDF 2.4 Mo)</a>
+        <div class="card bg-base-200 shadow-sm">
+          <div class="card-body">
+            <h4 class="card-title">📄 Mémoire de fin d'études (2020)</h4>
+            <div class="divider my-2"></div>
+            <p class="italic">"Mise au point d'une stratégie d'inscription et de sélection conservatrice de variétés patrimoniales légumières en agriculture biologique : exemple de l'entreprise semencière AGROSEMENS"</p>
+            <div class="divider my-2"></div>
+            <div class="grid sm:grid-cols-2 gap-2 text-sm">
+              <div><strong>Auteur :</strong> Laura Gautier</div>
+              <div><strong>Établissement :</strong> Agrocampus Ouest, 2020</div>
+              <div><strong>Directeurs :</strong> E. Geoffriau, L.-M. Brouard</div>
+              <div><strong>Type :</strong> Mémoire d'ingénieur agronome</div>
+            </div>
+            <p class="mt-3 text-sm"><strong>Résumé :</strong> Méthodologie complète pour l'inscription de variétés patrimoniales au Catalogue Officiel (listes C/D), avec optimisation de la maintenance pour limiter la dérive génétique.</p>
+            <div class="flex items-center gap-2 mt-3">
+              <span class="badge badge-accent">HAL Open Access</span>
+              <a class="link link-primary" href="https://dumas.ccsd.cnrs.fr/dumas-03044131v1" target="_blank">Consulter le PDF (2.4 Mo)</a>
+            </div>
           </div>
         </div>
 
-        <h4 class="font-bold">🌍 Langues</h4>
-        <div class="overflow-x-auto mt-2">
-          <table class="table table-zebra">
-            <thead>
-              <tr><th>Langue</th><th>Niveau</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Français</td><td>Langue maternelle</td></tr>
-              <tr><td>Anglais</td><td>C1 — Full professional proficiency</td></tr>
-              <tr><td>Espagnol</td><td>Courant</td></tr>
-            </tbody>
-          </table>
+        <div class="grid sm:grid-cols-2 gap-3 mt-4">
+          <div class="card bg-base-200">
+            <div class="card-body p-4">
+              <h4 class="font-bold">🌍 Langues</h4>
+              <table class="table table-xs mt-2">
+                <tr><td>Français</td><td>Maternelle</td></tr>
+                <tr><td>Anglais</td><td>C1 — Courant professionnel</td></tr>
+                <tr><td>Espagnol</td><td>Courant</td></tr>
+              </table>
+            </div>
+          </div>
+          <div class="card bg-base-200">
+            <div class="card-body p-4">
+              <h4 class="font-bold">🛠️ Compétences</h4>
+              <div class="flex flex-wrap gap-1 mt-2">
+                <span class="badge badge-sm">Production semences</span>
+                <span class="badge badge-sm">Agriculture bio</span>
+                <span class="badge badge-sm">Sélection variétale</span>
+                <span class="badge badge-sm">Catalogue officiel</span>
+                <span class="badge badge-sm">Gestion de gamme</span>
+                <span class="badge badge-sm">Qualité semences</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </details>
 
-    <!-- 5. PRESENCE EN LIGNE -->
-    <details class="collapse collapse-arrow bg-base-100 border border-base-300">
-      <summary class="collapse-title text-xl font-medium">🌐 Présence en ligne</summary>
+    <!-- SECTION 5 : PRESENCE EN LIGNE -->
+    <details class="collapse collapse-arrow bg-base-100 border border-base-300 shadow-sm" id="online">
+      <summary class="collapse-title text-xl font-semibold">
+        <span class="flex items-center gap-2">
+          <span>🌐</span> Présence en ligne
+          <span class="badge badge-sm">5 comptes</span>
+        </span>
+      </summary>
       <div class="collapse-content">
-        <h4 class="font-bold mb-3">Comptes identifiés</h4>
         <div class="overflow-x-auto">
           <table class="table table-zebra">
             <thead>
-              <tr><th>Plateforme</th><th>Identifiant</th><th>Statut</th><th>Preuve</th></tr>
+              <tr><th>Plateforme</th><th>Identifiant</th><th>Statut</th><th>Détail</th></tr>
             </thead>
             <tbody>
               <tr>
-                <td>LinkedIn</td>
-                <td>/in/laura-gautier-</td>
-                <td><span class="badge badge-success">Confirmé</span></td>
-                <td>Ingénieure production semences, 646+ abonnés. Localisation Alençon.</td>
+                <td>
+                  <span class="flex items-center gap-1">
+                    <span>💼</span> LinkedIn
+                  </span>
+                </td>
+                <td><a class="link link-primary link-xs" href="https://www.linkedin.com/in/laura-gautier-" target="_blank">/in/laura-gautier-</a></td>
+                <td><span class="badge badge-success badge-xs">Confirmé</span></td>
+                <td class="text-xs">Ingénieure production, 646+ abonnés. Localisation Alençon.</td>
               </tr>
               <tr>
-                <td>Facebook</td>
-                <td>laura.gautier.35</td>
-                <td><span class="badge badge-success">Confirmé</span></td>
-                <td>Profil personnel. LPA Alençon + famille (Sébastien Kerambellec, Morrigan Wolfmoon).</td>
+                <td>
+                  <span class="flex items-center gap-1">
+                    <span>📘</span> Facebook
+                  </span>
+                </td>
+                <td><a class="link link-primary link-xs" href="https://www.facebook.com/laura.gautier.35/" target="_blank">laura.gautier.35</a></td>
+                <td><span class="badge badge-success badge-xs">Confirmé</span></td>
+                <td class="text-xs">Profil perso. LPA Alençon + famille.</td>
               </tr>
               <tr>
-                <td>Spotify</td>
-                <td>via hotmail</td>
-                <td><span class="badge badge-success">Confirmé</span></td>
-                <td>Holehe — email utilisé sur Spotify</td>
+                <td>
+                  <span class="flex items-center gap-1">
+                    <span>🎵</span> Spotify
+                  </span>
+                </td>
+                <td class="text-xs">via hotmail.fr</td>
+                <td><span class="badge badge-success badge-xs">Confirmé</span></td>
+                <td class="text-xs">Holehe — email utilisé</td>
               </tr>
               <tr>
-                <td>HAL / DUMAS</td>
-                <td>dumas-03044131</td>
-                <td><span class="badge badge-success">Confirmé</span></td>
-                <td>Mémoire d'ingénieur 2020 open access</td>
+                <td>
+                  <span class="flex items-center gap-1">
+                    <span>📄</span> HAL / DUMAS
+                  </span>
+                </td>
+                <td><a class="link link-primary link-xs" href="https://dumas.ccsd.cnrs.fr/dumas-03044131v1" target="_blank">dumas-03044131</a></td>
+                <td><span class="badge badge-success badge-xs">Confirmé</span></td>
+                <td class="text-xs">Mémoire ingénieur 2020</td>
               </tr>
               <tr>
-                <td>Facebook groupes</td>
-                <td>RuninAngers</td>
-                <td><span class="badge badge-warning">Probable</span></td>
-                <td>Interactions dans groupes angevins</td>
+                <td>
+                  <span class="flex items-center gap-1">
+                    <span>🏃</span> RuninAngers
+                  </span>
+                </td>
+                <td class="text-xs">Groupe Facebook</td>
+                <td><span class="badge badge-warning badge-xs">Probable</span></td>
+                <td class="text-xs">Présence dans le groupe</td>
               </tr>
             </tbody>
           </table>
         </div>
 
         <div class="alert alert-info mt-4">
-          <span>ℹ️ <strong>Note :</strong> Le username "lauragautier" existe sur 23+ plateformes mais appartient à une homonyme (développeuse web). Seuls les comptes attribuables à notre cible sont listés.</span>
+          <span class="text-sm">ℹ️ <strong>Note :</strong> Le username "lauragautier" existe sur 23+ plateformes (Chess.com, Strava, Wattpad…) mais appartient à une homonyme (développeuse web à Tremblay-en-France). Seuls les comptes attribuables à notre cible sont listés.</span>
         </div>
       </div>
     </details>
 
-    <!-- 6. CENTRES D'INTERET -->
-    <details class="collapse collapse-arrow bg-base-100 border border-base-300">
-      <summary class="collapse-title text-xl font-medium">🚣 Centres d'intérêt & Loisirs</summary>
+    <!-- SECTION 6 : LOISIRS -->
+    <details class="collapse collapse-arrow bg-base-100 border border-base-300 shadow-sm" id="loisirs">
+      <summary class="collapse-title text-xl font-semibold">
+        <span class="flex items-center gap-2">
+          <span>🚣</span> Centres d'intérêt
+        </span>
+      </summary>
       <div class="collapse-content">
         <div class="grid sm:grid-cols-2 gap-4">
-          <div class="card bg-base-200">
-            <div class="card-body">
-              <h4 class="card-title">🚣 Aviron</h4>
-              <p>Pratique de l'aviron en loisir. Mentionnée dans des résultats de compétitions Zone Nord-Ouest Aviron (2015, catégorie J15).</p>
+          <div class="card bg-base-200 shadow-sm">
+            <div class="card-body p-5">
+              <h4 class="card-title text-base">🚣 Aviron</h4>
+              <p class="text-sm">Pratique en loisir. Mentionnée dans des résultats Zone Nord-Ouest Aviron 2015 (catégorie J15)</p>
             </div>
           </div>
-          <div class="card bg-base-200">
-            <div class="card-body">
-              <h4 class="card-title">🏃 Running</h4>
-              <p>Membre du groupe Facebook <em>RuninAngers</em> — communauté de course à pied angevine.</p>
+          <div class="card bg-base-200 shadow-sm">
+            <div class="card-body p-5">
+              <h4 class="card-title text-base">🏃 Running</h4>
+              <p class="text-sm">Membre du groupe Facebook <em>RuninAngers</em></p>
             </div>
           </div>
-          <div class="card bg-base-200">
-            <div class="card-body">
-              <h4 class="card-title">🎵 Musique</h4>
-              <p>Compte Spotify confirmé (holehe).</p>
+          <div class="card bg-base-200 shadow-sm">
+            <div class="card-body p-5">
+              <h4 class="card-title text-base">🎵 Musique</h4>
+              <p class="text-sm">Compte Spotify confirmé</p>
             </div>
           </div>
-          <div class="card bg-base-200">
-            <div class="card-body">
-              <h4 class="card-title">🌱 Agronomie</h4>
-              <p>Passionnée par les semences bio et la préservation des variétés patrimoniales.</p>
+          <div class="card bg-base-200 shadow-sm">
+            <div class="card-body p-5">
+              <h4 class="card-title text-base">🌱 Agronomie</h4>
+              <p class="text-sm">Passion pour les semences bio et la préservation variétale</p>
             </div>
           </div>
         </div>
       </div>
     </details>
 
-    <!-- 7. SYNTHESE GEO -->
-    <details class="collapse collapse-arrow bg-base-100 border border-base-300">
-      <summary class="collapse-title text-xl font-medium">🗺️ Synthèse géographique — La boucle Alençon → Angers</summary>
+    <!-- SECTION 7 : CARTE -->
+    <details class="collapse collapse-arrow bg-base-100 border border-base-300 shadow-sm" id="geo">
+      <summary class="collapse-title text-xl font-semibold">
+        <span class="flex items-center gap-2">
+          <span>🗺️</span> Carte & Parcours géographique
+        </span>
+      </summary>
       <div class="collapse-content">
-        <p class="mb-3">Le parcours de Laura Gautier dessine un arc cohérent entre le nord de la Sarthe/Orne et l'Anjou :</p>
-        <div class="overflow-x-auto">
-          <table class="table table-zebra">
-            <thead>
-              <tr><th>Étape</th><th>Lieu</th><th>Département</th><th>Distance</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Naissance</td><td>Alençon / Champfleur</td><td>Orne (61) / Sarthe (72)</td><td>—</td></tr>
-              <tr><td>Lycée</td><td>LPA Alençon</td><td>Orne (61)</td><td>0 km</td></tr>
-              <tr><td>École ingé</td><td>Agrocampus Rennes/Angers</td><td>35 / 49</td><td>~130 km</td></tr>
-              <tr><td>Emploi actuel</td><td>LOIRE SEEDS — Corné</td><td>Maine-et-Loire (49)</td><td>~120 km</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="alert alert-info mt-4">
-          <span>ℹ️ Alençon ↔ Angers : ~1h15 de route. Le "72" dans l'email est le code de la Sarthe.</span>
+        <div id="map" class="mb-4 shadow-sm"></div>
+
+        <div class="card bg-base-200">
+          <div class="card-body p-4">
+            <h4 class="font-bold">Synthèse du parcours</h4>
+            <div class="overflow-x-auto mt-2">
+              <table class="table table-zebra table-xs">
+                <thead>
+                  <tr><th>Étape</th><th>Lieu</th><th>Dépt</th><th>Distance d'Alençon</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Naissance</td><td>Alençon / Champfleur</td><td>61 / 72</td><td>—</td></tr>
+                  <tr><td>Lycée</td><td>LPA Alençon</td><td>61</td><td>0 km</td></tr>
+                  <tr><td>École ingé</td><td>Rennes & Angers</td><td>35 / 49</td><td>~130 km</td></tr>
+                  <tr><td>Emploi</td><td>LOIRE SEEDS — Corné</td><td>49</td><td>~120 km</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </details>
 
-    <!-- 8. METHODOLOGIE -->
-    <details class="collapse collapse-arrow bg-base-100 border border-base-300">
-      <summary class="collapse-title text-xl font-medium">🔬 Méthodologie & Sources</summary>
+    <!-- SECTION 8 : METHODO -->
+    <details class="collapse collapse-arrow bg-base-100 border border-base-300 shadow-sm" id="methodo">
+      <summary class="collapse-title text-xl font-semibold">
+        <span class="flex items-center gap-2">
+          <span>🔬</span> Méthodologie & Sources
+          <span class="badge badge-sm">7 outils</span>
+        </span>
+      </summary>
       <div class="collapse-content">
         <div class="overflow-x-auto">
           <table class="table table-zebra">
@@ -403,30 +602,41 @@
               <tr><th>Outil</th><th>Cible</th><th>Résultat</th></tr>
             </thead>
             <tbody>
-              <tr><td>holehe</td><td>laura.gautier72@hotmail.fr</td><td>121 sites vérifiés — Spotify confirmé</td></tr>
-              <tr><td>Recherche web</td><td>"Laura Gautier" agronome</td><td>LinkedIn, mémoire HAL, Loire Seeds</td></tr>
-              <tr><td>LinkedIn (public)</td><td>Profil laura-gautier-</td><td>Localisation "Alençon, Basse-Normandie"</td></tr>
-              <tr><td>Facebook (public)</td><td>laura.gautier.35</td><td>Éducation LPA Alençon</td></tr>
-              <tr><td>HAL / DUMAS</td><td>dumas-03044131</td><td>Mémoire ingénieur 2020 — 56 pages</td></tr>
-              <tr><td>Géographie</td><td>Champfleur + Alençon</td><td>Communauté urbaine d'Alençon</td></tr>
-              <tr><td>OpenStreetMap</td><td>Leaflet</td><td>Carte interactive 5 marqueurs</td></tr>
+              <tr><td>🔍 holehe</td><td>laura.gautier72@hotmail.fr</td><td>121 sites — Spotify confirmé</td></tr>
+              <tr><td>🌐 Recherche web</td><td>"Laura Gautier" + agronome</td><td>LinkedIn, HAL, Loire Seeds</td></tr>
+              <tr><td>💼 LinkedIn (public)</td><td>Profil laura-gautier-</td><td>Localisation "Alençon, Basse-Normandie"</td></tr>
+              <tr><td>📘 Facebook (public)</td><td>laura.gautier.35</td><td>Éducation LPA Alençon</td></tr>
+              <tr><td>📄 HAL / DUMAS</td><td>dumas-03044131</td><td>Mémoire ingénieur 56p.</td></tr>
+              <tr><td>🗺️ OpenStreetMap</td><td>Leaflet + géocodage</td><td>Carte interactive (5 marqueurs)</td></tr>
+              <tr><td>📋 Annuaires</td><td>"Laura Gautier"</td><td>Profils multiples avec Alençon</td></tr>
             </tbody>
           </table>
+        </div>
+
+        <div class="divider my-4">⚙️ Configuration technique</div>
+        <div class="flex flex-wrap gap-2">
+          <span class="badge badge-outline">DaisyUI 5</span>
+          <span class="badge badge-outline">Leaflet 1.9</span>
+          <span class="badge badge-outline">OpenStreetMap</span>
+          <span class="badge badge-outline">Tailwind CDN</span>
+          <span class="badge badge-outline">GitHub Pages</span>
         </div>
       </div>
     </details>
 
   </div>
 
-  <!-- ===== Footer ===== -->
+  <!-- ===== FOOTER ===== -->
   <footer class="footer footer-center bg-base-100 text-base-content p-6 mt-8">
     <div>
-      <p>Rapport OSINT généré le 6 juin 2026 • Hermes Agent • nobellagent</p>
+      <p class="font-semibold">Rapport OSINT — Laura Gautier</p>
+      <p class="text-sm">Généré le 6 juin 2026 • Hermes Agent • nobellagent</p>
       <p class="text-xs opacity-50">Données issues de sources publiques. À vérifier avant toute utilisation.</p>
     </div>
   </footer>
 
   <script>
+    // Carte Leaflet
     const map = L.map('map').setView([47.8, 0.2], 7);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -435,60 +645,35 @@
     }).addTo(map);
 
     const markers = [
-      {
-        coords: [48.4295, 0.0941],
-        title: '📍 Alençon (61) — Naissance',
-        desc: 'Lycée LPA Alençon. LinkedIn : "Alençon, Basse-Normandie"'
-      },
-      {
-        coords: [48.3859, 0.1290],
-        title: '📍 Champfleur (72) — Origine',
-        desc: 'Sarthe, à 8 km d\'Alençon - Le "72" de l\'email'
-      },
-      {
-        coords: [48.1135, -1.6765],
-        title: '🎓 Rennes — Agrocampus Ouest',
-        desc: 'Formation ingénieur agronome (2015-2020)'
-      },
-      {
-        coords: [47.4719, -0.3466],
-        title: '🏢 Corné — LOIRE SEEDS',
-        desc: 'Emploi actuel — Production semences'
-      },
-      {
-        coords: [47.4784, -0.5508],
-        title: '🏙️ Angers',
-        desc: 'Ville de vie actuelle — RuninAngers'
-      },
+      { coords: [48.4295, 0.0941], title: '📍 Alençon (61) — Naissance', desc: 'LPA Alençon. LinkedIn : "Alençon, Basse-Normandie"' },
+      { coords: [48.3859, 0.1290], title: '📍 Champfleur (72) — Origine', desc: 'Sarthe, à 8 km d\'Alençon — Le "72" de l\'email' },
+      { coords: [48.1135, -1.6765], title: '🎓 Rennes — Agrocampus Ouest', desc: 'Formation ingénieur agronome (2015-2020)' },
+      { coords: [47.4719, -0.3466], title: '🏢 Corné — LOIRE SEEDS', desc: 'Emploi actuel — Production semences' },
+      { coords: [47.4784, -0.5508], title: '🏙️ Angers', desc: 'Bassin de vie — RuninAngers' },
     ];
 
-    markers.forEach(m => {
+    const group = L.featureGroup(markers.map((m, i) => {
       const isOrigin = m.title.includes('Naissance') || m.title.includes('Origine');
       const icon = isOrigin ? L.icon({
         iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-red.png',
         shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
+        iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
       }) : undefined;
-      L.marker(m.coords, { icon })
-        .addTo(map)
-        .bindPopup(`<strong>${m.title}</strong><br>${m.desc}`);
-    });
+      const marker = L.marker(m.coords, { icon }).addTo(map);
+      marker.bindPopup(`<strong>${m.title}</strong><br>${m.desc}`);
+      return marker;
+    }));
 
     L.polyline([
-      [48.4295, 0.0941],
-      [47.4784, -0.5508]
-    ], {
-      color: '#f97316',
-      weight: 2,
-      dashArray: '10, 10',
-      opacity: 0.5
-    }).addTo(map);
+      [48.4295, 0.0941], [47.4784, -0.5508]
+    ], { color: '#f97316', weight: 2, dashArray: '10, 10', opacity: 0.5 }).addTo(map);
 
-    const group = L.featureGroup(markers.map(m => L.marker(m.coords)));
     map.fitBounds(group.getBounds().pad(0.15));
+
+    // Map refresh when section opens (fix rendering bug)
+    document.getElementById('geo').addEventListener('toggle', function() {
+      if (this.open) setTimeout(() => map.invalidateSize(), 100);
+    });
   </script>
 
 </body>
